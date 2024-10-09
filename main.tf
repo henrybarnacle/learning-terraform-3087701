@@ -52,13 +52,21 @@ resource "aws_lambda_function" "lambda" {
   role          = aws_iam_role.lambda_role.arn
   handler       = "index.handler"
   runtime       = "nodejs18.x"
-  filename      = "lambda_function_payload.zip"
 
   environment {
     variables = {
       STAGE = "dev"
     }
   }
+  source_code = <<EOF
+    exports.handler = async (event) => {
+      console.log("Hello, World!");
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ message: "Hello, World!" }),
+      };
+    };
+  EOF
 }
 
 # API Gateway

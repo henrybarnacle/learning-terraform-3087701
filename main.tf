@@ -52,7 +52,7 @@ resource "aws_lambda_function" "lambda" {
   role          = aws_iam_role.lambda_role.arn
   handler       = "index.handler"
   runtime       = "nodejs18.x"
-  filename      = "index.js"
+  filename      = "lambda_function_payload.zip"
 
   environment {
     variables = {

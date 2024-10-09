@@ -53,11 +53,6 @@ resource "aws_lambda_function" "lambda" {
   handler       = "index.handler"
   runtime       = "nodejs18.x"
 
-  environment {
-    variables = {
-      STAGE = "dev"
-    }
-  }
   source_code = <<EOF
     exports.handler = async (event) => {
       console.log("Hello, World!");
@@ -67,6 +62,13 @@ resource "aws_lambda_function" "lambda" {
       };
     };
   EOF
+
+  environment {
+    variables = {
+      STAGE = "dev"
+    }
+  }
+
 }
 
 # API Gateway

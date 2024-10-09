@@ -79,9 +79,10 @@ resource "aws_lambda_function" "lambda" {
   function_name = "my_lambda_function"
   role          = aws_iam_role.lambda_role.arn
   handler       = "index.handler"
-  runtime       = "nodejs18.x"
+  package_type  = "Zip"
   s3_bucket     = "my-lambda-bucket88"
   s3_key        = "lambda_function_payload.zip"
+  runtime       = "nodejs18.x"
 
   environment {
     variables = {

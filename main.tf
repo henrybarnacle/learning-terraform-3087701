@@ -52,8 +52,8 @@ resource "aws_lambda_function" "lambda" {
   role          = aws_iam_role.lambda_role.arn
   handler       = "index.handler"
   runtime       = "nodejs18.x"
-  filename      = "lambda_function_payload.zip"
-  source_code_hash = filebase64sha256("lambda_function_payload.zip")
+  s3_bucket     = "my-lambda-bucket88"
+  s3_key        = "lambda_function_payload.zip"
 
   environment {
     variables = {

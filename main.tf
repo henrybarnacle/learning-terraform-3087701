@@ -46,34 +46,6 @@ resource "aws_iam_role_policy_attachment" "lambda_basic_policy" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
-resource "aws_iam_policy" "lambda_s3_access_policy" {
-  name        = "lambda_s3_access_policy"
-  description = "Policy to allow Lambda function to access S3"
-
-  policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Action = [
-          "s3:GetObject",
-          "s3:PutObject",
-          "s3:ListBucket"
-        ],
-        Effect   = "Allow",
-        Resource = [
-          "arn:aws:s3:::my-lambda-bucket88",              # Access to the bucket itself
-          "arn:aws:s3:::my-lambda-bucket88/*"             # Access to all objects in the bucket
-        ]
-      }
-    ]
-  })
-}
-
-resource "aws_iam_role_policy_attachment" "lambda_s3_policy_attachment" {
-  role       = aws_iam_role.lambda_role.name
-  policy_arn = aws_iam_policy.lambda_s3_access_policy.arn
-}
-
 # Lambda Function
 resource "aws_lambda_function" "lambda" {
   function_name = "my_lambda_function"

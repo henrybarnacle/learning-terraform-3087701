@@ -65,23 +65,23 @@ resource "aws_lambda_function" "lambda" {
 }
 
 # API Gateway
-resource "aws_api_gateway_rest_api" "api" {
+resource "aws_api_gateway_rest_api" "rates-api" {
   name        = "my-api"
   description = "API for my Lambda function"
 }
 
 # Proxy resource
 resource "aws_api_gateway_resource" "proxy" {
-  rest_api_id = aws_api_gateway_rest_api.api.id
-  parent_id   = aws_api_gateway_rest_api.api.root_resource_id
-  path_part   = "{proxy+}"
+  rest_api_id = aws_api_gateway_rest_api.rates-api.id
+  parent_id   = aws_api_gateway_rest_api.rates-api.root_resource_id
+  path_part   = "getRates"
 }
 
 # ANY method
 resource "aws_api_gateway_method" "proxy_method" {
-  rest_api_id   = aws_api_gateway_rest_api.api.id
+  rest_api_id   = aws_api_gateway_rest_api.rates-api.id
   resource_id   = aws_api_gateway_resource.proxy.id
-  http_method   = "ANY"
+  http_method   = "GET"
   authorization = "NONE"
 }
 

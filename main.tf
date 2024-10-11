@@ -66,7 +66,7 @@ resource "aws_lambda_function" "lambda" {
 
 # API Gateway
 resource "aws_api_gateway_rest_api" "rates-api" {
-  name        = "my-api"
+  name        = "rates-api"
   description = "API for my Lambda function"
 }
 

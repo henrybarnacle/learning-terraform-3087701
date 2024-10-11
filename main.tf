@@ -87,7 +87,7 @@ resource "aws_api_gateway_method" "proxy_method" {
 
 # Lambda integration
 resource "aws_api_gateway_integration" "lambda_integration" {
-  rest_api_id             = aws_api_gateway_rest_api.api.id
+  rest_api_id             = aws_api_gateway_rest_api.rates-api.id
   resource_id             = aws_api_gateway_resource.proxy.id
   http_method             = aws_api_gateway_method.proxy_method.http_method
   integration_http_method = "POST"
@@ -101,7 +101,7 @@ resource "aws_lambda_permission" "apigw_lambda" {
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.lambda.function_name
   principal     = "apigateway.amazonaws.com"
-  source_arn    = "${aws_api_gateway_rest_api.api.execution_arn}/*/*"
+  source_arn    = "${aws_api_gateway_rest_api.rates-api.execution_arn}/*/*"
 }
 
 # Deploy API Gateway

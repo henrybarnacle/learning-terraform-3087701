@@ -108,10 +108,10 @@ resource "aws_lambda_permission" "apigw_lambda" {
 resource "aws_api_gateway_deployment" "api_deployment" {
   depends_on = [aws_api_gateway_integration.lambda_integration]
   
-  rest_api_id = aws_api_gateway_rest_api.api.id
+  rest_api_id = aws_api_gateway_rest_api.rates-api.id
   stage_name  = "dev"
 }
 
 output "api_invoke_url" {
-  value = "${aws_api_gateway_rest_api.api.execution_arn}/dev"
+  value = "${aws_api_gateway_rest_api.rates-api.execution_arn}/dev"
 }

@@ -99,7 +99,7 @@ resource "aws_api_gateway_integration" "lambda_integration" {
 resource "aws_lambda_permission" "apigw_lambda" {
   statement_id  = "AllowAPIGatewayInvoke"
   action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.aspida_rates.function_name
+  function_name = aws_lambda_function.xx-lambda.function_name
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_api_gateway_rest_api.rates-api.execution_arn}/*/*"
 }

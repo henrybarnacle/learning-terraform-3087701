@@ -48,7 +48,7 @@ resource "aws_iam_role_policy_attachment" "lambda_basic_policy" {
 
 # Lambda Function
 resource "aws_lambda_function" "xx-lambda" {
-  function_name = "my_lambda_function"
+  function_name = "xx-lambda"
   role          = aws_iam_role.lambda_role.arn
   handler       = "index.handler"
   package_type  = "Zip"

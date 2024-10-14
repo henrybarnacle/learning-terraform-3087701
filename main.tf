@@ -47,7 +47,7 @@ resource "aws_iam_role_policy_attachment" "lambda_basic_policy" {
 }
 
 # Lambda Function
-resource "aws_lambda_function" "lambda" {
+resource "aws_lambda_function" "xx-lambda" {
   function_name = "my_lambda_function"
   role          = aws_iam_role.lambda_role.arn
   handler       = "index.handler"
@@ -92,7 +92,7 @@ resource "aws_api_gateway_integration" "lambda_integration" {
   http_method             = aws_api_gateway_method.proxy_method.http_method
   integration_http_method = "POST"
   type                    = "AWS_PROXY"
-  uri                     = aws_lambda_function.lambda.invoke_arn
+  uri                     = aws_lambda_function.xx-lambda.invoke_arn
 }
 
 # Lambda permission for API Gateway

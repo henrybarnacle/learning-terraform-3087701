@@ -108,6 +108,20 @@ resource "aws_api_gateway_method" "options_method" {
     "method.request.header.Access-Control-Request-Headers" = false
   }
 }
+
+resource "aws_api_gateway_method_response" "options_method_response" {
+  rest_api_id = aws_api_gateway_rest_api.rates-api.id
+  resource_id = aws_api_gateway_resource.proxy.id
+  http_method = aws_api_gateway_method.options_method.http_method
+  status_code = "200"
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Origin" = true
+    "method.response.header.Access-Control-Allow-Headers" = true
+    "method.response.header.Access-Control-Allow-Methods" = true
+  }
+}
+
 resource "aws_api_gateway_integration" "options_integration" {
   rest_api_id = aws_api_gateway_rest_api.rates-api.id
   resource_id = aws_api_gateway_resource.proxy.id
@@ -120,7 +134,7 @@ resource "aws_api_gateway_integration" "options_integration" {
 
   integration_http_method = "POST"
 }
-resource "aws_api_gateway_integration_response" "options" {
+resource "aws_api_gateway_integration_response" "options_integration_response" {
     rest_api_id = aws_api_gateway_rest_api.rates-api.id
     resource_id = aws_api_gateway_resource.proxy.id
     http_method = aws_api_gateway_method.options_method.http_method
@@ -137,18 +151,7 @@ resource "aws_api_gateway_integration_response" "options" {
   }
 
 }
-resource "aws_api_gateway_method_response" "options_method_response" {
-  rest_api_id = aws_api_gateway_rest_api.rates-api.id
-  resource_id = aws_api_gateway_resource.proxy.id
-  http_method = aws_api_gateway_method.options_method.http_method
-  status_code = "200"
 
-  response_parameters = {
-    "method.response.header.Access-Control-Allow-Origin" = true
-    "method.response.header.Access-Control-Allow-Headers" = true
-    "method.response.header.Access-Control-Allow-Methods" = true
-  }
-}
 
 # Lambda integration
 resource "aws_api_gateway_integration" "lambda_integration" {

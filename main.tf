@@ -119,9 +119,9 @@ resource "aws_api_gateway_method" "options_method" {
   authorization = "NONE"
 
   request_parameters = {
-    "method.request.header.Origin" = false
-    "method.request.header.Access-Control-Request-Method" = false
-    "method.request.header.Access-Control-Request-Headers" = false
+    "method.request.header.Origin" = true
+    "method.request.header.Access-Control-Request-Method" = true
+    "method.request.header.Access-Control-Request-Headers" = true
   }
 }
 

@@ -95,6 +95,22 @@ resource "aws_api_gateway_integration" "post_integration" {
   type                    = "AWS_PROXY"
   uri                     = aws_lambda_function.xx-lambda.invoke_arn
 }
+resource "aws_api_gateway_integration_response" "post_integration_response" {
+  rest_api_id = aws_api_gateway_rest_api.rates-api.id
+  resource_id = aws_api_gateway_resource.proxy.id
+  http_method = "POST"
+  status_code = "200"
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+    "method.response.header.Access-Control-Allow-Methods" = "'OPTIONS,POST'"
+    "method.response.header.Access-Control-Allow-Origin"  = "'*'"
+  }
+
+  response_templates = {
+    "application/json" = ""
+  }
+}
 # OPTIONS method
 resource "aws_api_gateway_method" "options_method" {
   rest_api_id   = aws_api_gateway_rest_api.rates-api.id

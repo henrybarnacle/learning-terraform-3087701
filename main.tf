@@ -197,3 +197,21 @@ resource "aws_api_gateway_deployment" "api_deployment" {
 output "api_invoke_url" {
   value = "${aws_api_gateway_rest_api.rates-api.execution_arn}/test"
 }
+
+# ADD DYNAMO DB
+resource "aws_dynamodb_table" "my_table" {
+  name           = "my-dynamodb-table"
+  billing_mode   = "PAY_PER_REQUEST"  # Or "PROVISIONED"
+
+  hash_key       = "id"  # Primary key
+
+  attribute {
+    name = "id"
+    type = "S"  # S = String, N = Number, B = Binary
+  }
+
+  tags = {
+    Environment = "dev"
+    Project     = "my-project"
+  }
+}

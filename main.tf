@@ -68,33 +68,37 @@ resource "aws_api_gateway_resource" "proxy" {
   path_part   = "getRates"
 }
 
-# GET method
-resource "aws_api_gateway_method" "get_method" {
-  rest_api_id   = aws_api_gateway_rest_api.rates-api.id
-  resource_id   = aws_api_gateway_resource.proxy.id
+# GET METHOD   = aws_api_gateway_resource.proxy.id
   http_method   = "GET"
   authorization = "NONE"
 }
 
 resource "aws_api_gateway_integration" "get_integration" {
-  rest_api_id = aws_api_gateway_rest_api.rates-api.id
-  resource_id = aws_api_gateway_resource.proxy.id
-  http_method = aws_api_gateway_method.get_method.http_method
-  integration_http_method = "GET"
+  rest_api_id             = aws_api_gateway_rest_api.rates-api.id
+  resource_id             = aws_api_gateway_resource.proxy.id
+  http_method             = aws_api_gateway_method.get_method.http_method
+  integration_http_method = "POST" # Always POST for AWS_PROXY to Lambda
   type                    = "AWS_PROXY"
   uri                     = aws_lambda_function.xx-lambda.invoke_arn
 }
-
-resource "aws_api_gateway_integration_response" "get_integration_response" {
+resource "aws_api_gateway_method_response" "get_method_response" {
   rest_api_id = aws_api_gateway_rest_api.rates-api.id
   resource_id = aws_api_gateway_resource.proxy.id
-  http_method = "GET"
+  http_method = aws_api_gateway_method.get_method.http_method
   status_code = "200"
 
   response_parameters = {
-    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-    "method.response.header.Access-Control-Allow-Methods" = "'OPTIONS,POST,GET'"
-    "method.response.header.Access-Control-Allow-Origin"  = "'*'"
+    "method.response.header.Access-Control-Allow-Origin"  = true
+  }
+}
+resource "aws_api_gateway_integration_response" "get_integration_response" {
+  rest_api_id = aws_api_gateway_rest_api.rates-api.id
+  resource_id = aws_api_gateway_resource.proxy.id
+  http_method = aws_api_gateway_method.get_method.http_method
+  status_code = "200"
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Origin" = "'*'"
   }
 
   response_templates = {
@@ -192,7 +196,7 @@ resource "aws_api_gateway_integration_response" "options_integration_response" {
     response_parameters = {
     "method.response.header.Access-Control-Allow-Origin" = "'*'"
     "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-    "method.response.header.Access-Control-Allow-Methods" = "'POST, GET, OPTIONS'"
+    "method.response.header.Access-Control-Allow-Methods" = "'POST, OPTIONS'"
   }
 
   response_templates = {
@@ -200,7 +204,6 @@ resource "aws_api_gateway_integration_response" "options_integration_response" {
   }
 
 }
-
 
 # Lambda integration
 resource "aws_api_gateway_integration" "lambda_integration" {
@@ -223,9 +226,13 @@ resource "aws_lambda_permission" "apigw_lambda" {
 
 # Deploy API Gateway
 resource "aws_api_gateway_deployment" "api_deployment" {
-  depends_on = [aws_api_gateway_integration.lambda_integration]
+  depends_on = [
+    aws_api_gateway_integration.lambda_integration,
+    aws_api_gateway_integration.get_integration,
+  ]
   
   rest_api_id = aws_api_gateway_rest_api.rates-api.id
+  stage_name  = "test"
 }
 
 output "api_invoke_url" {

@@ -32,6 +32,31 @@ resource "aws_iam_role" "lambda_role" {
   })
 }
 
+resource "aws_iam_policy" "lambda_dynamo_policy" {
+  name        = "lambda-dynamodb-access"
+  description = "Allow Lambda to read from DynamoDB"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect   = "Allow",
+        Action   = [
+          "dynamodb:GetItem",
+          "dynamodb:Query",
+          "dynamodb:Scan"
+        ],
+        Resource = "arn:aws:dynamodb:us-west-1:357862968165:table/my-dynamodb-table"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_dynamo_attach" {
+  role       = aws_iam_role.lambda_role.name
+  policy_arn = aws_iam_policy.lambda_dynamo_policy.arn
+}
+
 resource "aws_iam_role_policy_attachment" "lambda_basic_policy" {
   role       = aws_iam_role.lambda_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
